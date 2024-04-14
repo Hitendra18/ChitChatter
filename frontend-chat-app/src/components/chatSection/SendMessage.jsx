@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { IoIosSend } from "react-icons/io";
 import { useSelector } from "react-redux";
 import { useSendMessage } from "../../services/mutations/messages";
@@ -15,43 +15,47 @@ const SendMessage = () => {
   const { socket } = useSocketState();
   const { setMessagesData } = useMessagesDataState();
 
-  const onSendMessageSuccess = (data) => {
-    const receivers = getReceivers(selectedChat, user?._id);
+  const onSendMessageSuccess = useCallback(
+    (data) => {
+      const receivers = getReceivers(selectedChat, user?._id);
 
-    socket.emit("message sent", {
-      receivers,
-      message: data,
-    });
+      socket.emit("message sent", {
+        receivers,
+        message: data,
+      });
+      console.log("message sent", data);
 
-    setMessagesData((previous) => {
-      if (previous && previous.length > 0) {
-        return [...previous, { ...data }];
-      }
-      return [{ ...data }];
-    });
+      setMessagesData((previous) => {
+        if (previous && previous.length > 0) {
+          return [...previous, { ...data }];
+        }
+        return [{ ...data }];
+      });
 
-    setSelectedChat((previous) => {
-      return { ...previous, latestMessage: data };
-    });
+      setSelectedChat((previous) => {
+        return { ...previous, latestMessage: data };
+      });
 
-    const updatedChat = { ...selectedChat, latestMessage: data };
+      const updatedChat = { ...selectedChat, latestMessage: data };
 
-    setChatsData((previous) => {
-      if (!previous) {
-        return [updatedChat];
-      }
-      const chatIndex = previous.findIndex(
-        (item) => item?._id === selectedChat._id
-      );
-      if (chatIndex !== -1) {
-        return previous.map((item, index) =>
-          index === chatIndex ? updatedChat : item
+      setChatsData((previous) => {
+        if (!previous) {
+          return [updatedChat];
+        }
+        const chatIndex = previous.findIndex(
+          (item) => item?._id === selectedChat._id
         );
-      } else {
-        return [...previous, updatedChat];
-      }
-    });
-  };
+        if (chatIndex !== -1) {
+          return previous.map((item, index) =>
+            index === chatIndex ? updatedChat : item
+          );
+        } else {
+          return [...previous, updatedChat];
+        }
+      });
+    },
+    [selectedChat, setChatsData, setMessagesData, setSelectedChat, socket, user]
+  );
 
   const { mutate } = useSendMessage(onSendMessageSuccess);
 

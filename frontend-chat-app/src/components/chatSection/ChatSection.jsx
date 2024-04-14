@@ -11,8 +11,7 @@ import { useAccessRegularChat } from "../../services/mutations/chats";
 
 const ChatSection = () => {
   const { userInfo: user } = useSelector((state) => state.user);
-  const { selectedChat, setSelectedChat, chatsData, setChatsData } =
-    useChatState();
+  const { selectedChat, setSelectedChat, setChatsData } = useChatState();
   const { socket } = useSocketState();
 
   const accessRegularChatSuccess = (data) => {
@@ -43,22 +42,27 @@ const ChatSection = () => {
 
         // setting chatsData
         setChatsData((prev) => {
-          console.log("prev", prev);
+          let found = false;
           if (prev && prev.length > 0) {
+            console.log("prev if", prev);
             const toReturn = prev.map((item) => {
               if (item?._id === message?.chat) {
+                found = true;
                 item.latestMessage = message;
                 return item;
               }
               return item;
             });
-            return toReturn;
-          } else {
+            if (found) {
+              return toReturn;
+            }
+          }
+          if (!prev || !found) {
+            console.log("prev else", prev);
             accessRegularChatMutate({
               token: user?.token,
               receiverId: message?.sender?._id,
             });
-            console.log("prev else", prev);
             return prev;
           }
         });
@@ -70,7 +74,6 @@ const ChatSection = () => {
   }, [
     socket,
     selectedChat,
-    chatsData,
     setChatsData,
     accessRegularChatMutate,
     setSelectedChat,

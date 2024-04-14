@@ -19,6 +19,7 @@ const accessRegularChat = async (req, res, next) => {
     // if receiver exists then check if there is any chat with them
     const chat = await Chat.findOne({
       users: { $all: [receiverId, req.user._id], $size: 2 },
+      isGroupChat: false,
     })
       .populate({
         path: "latestMessage",

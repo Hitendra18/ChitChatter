@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Camera and Microphone</title>
+    <style>
+      #video-container {
+        width: 100%;
+        text-align: center;
+      }
+      video {
+        width: 100%;
+        max-width: 600px;
+      }
+      button {
+        margin: 10px;
+        padding: 8px 16px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="video-container">
+      <video id="video" autoplay></video>
+    </div>
+    <div>
+      <button id="toggle-camera">Turn Camera On/Off</button>
+      <button id="toggle-mic">Turn Microphone On/Off</button>
+    </div>
+
+    <script>
+      const videoElement = document.getElementById("video");
+      const toggleCameraButton = document.getElementById("toggle-camera");
+      const toggleMicButton = document.getElementById("toggle-mic");
+
+      let stream;
+
+      // Function to initialize the camera and microphone
+      async function initCameraAndMic() {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true,
+          });
+          videoElement.srcObject = stream;
+        } catch (err) {
+          console.error("Error accessing camera and microphone:", err);
+        }
+      }
+
+      // Function to toggle camera
+      function toggleCamera() {
+        if (stream) {
+          const tracks = stream.getVideoTracks();
+          tracks.forEach((track) => {
+            track.enabled = !track.enabled;
+          });
+        }
+      }
+
+      // Function to toggle microphone
+      function toggleMic() {
+        if (stream) {
+          const tracks = stream.getAudioTracks();
+          tracks.forEach((track) => {
+            track.enabled = !track.enabled;
+          });
+        }
+      }
+
+      // Event listeners for buttons
+      toggleCameraButton.addEventListener("click", toggleCamera);
+      toggleMicButton.addEventListener("click", toggleMic);
+
+      // Initialize camera and microphone
+      initCameraAndMic();
+    </script>
+  </body>
+</html>

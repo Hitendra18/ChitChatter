@@ -1,0 +1,44 @@
+import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
+
+import SignInPage from "./pages/SignInPage";
+import SignUpPage from "./pages/SignUpPage";
+import HomePage from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage";
+import ChatProvider from "./contexts/ChatProvider";
+
+function App() {
+  const { userInfo: user } = useSelector((state) => state.user);
+  return (
+    <div
+      className={`min-h-[100vh] ${
+        user?.darkTheme ? "bg-[#1A1B1B] text-white" : "bg-white text-[#363636]"
+      } font-rubik`}
+    >
+      <Routes>
+        <Route
+          index
+          element={
+            <ChatProvider>
+              <HomePage />
+            </ChatProvider>
+          }
+        />
+        <Route path="/sign-up" element={<SignUpPage />} />
+        <Route path="/sign-in" element={<SignInPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+      </Routes>
+      <ToastContainer
+        autoClose={2000}
+        hideProgressBar
+        stacked
+        position="top-center"
+      />
+    </div>
+  );
+}
+
+export default App;

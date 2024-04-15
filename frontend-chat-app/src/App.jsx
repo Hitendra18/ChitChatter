@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
+import AgoraRTC, { AgoraRTCProvider, useRTCClient } from "agora-rtc-react";
 
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -13,6 +14,10 @@ import ChatProvider from "./contexts/ChatProvider";
 
 function App() {
   const { userInfo: user } = useSelector((state) => state.user);
+  const agoraClient = useRTCClient(
+    AgoraRTC.createClient({ codec: "vp8", mode: "rtc" })
+  ); // Initialize Agora Client
+
   return (
     <div
       className={`min-h-[100vh] ${
@@ -31,7 +36,14 @@ function App() {
         <Route path="/sign-up" element={<SignUpPage />} />
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/meet/:meetId" element={<MeetPage />} />
+        <Route
+          path="/meet/:meetId"
+          element={
+            <AgoraRTCProvider client={agoraClient}>
+              <MeetPage />
+            </AgoraRTCProvider>
+          }
+        />
       </Routes>
       <ToastContainer
         autoClose={2000}

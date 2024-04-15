@@ -1,13 +1,35 @@
 import { useSelector } from "react-redux";
-import { IoArrowBack, IoCallOutline, IoVideocamOutline } from "react-icons/io5";
+import { IoArrowBack, IoCallOutline } from "react-icons/io5";
 import { useChatState } from "../../contexts/useChatState";
 import { useChatData } from "../../hooks/chatTileHooks";
+import { useSocketState } from "../../contexts/useSocketState";
+import { getReceivers } from "../../utils/getReceivers";
 
 const ChatSectionTop = () => {
   const { userInfo: user } = useSelector((state) => state.user);
   const { selectedChat, setSelectedChat } = useChatState();
-  // console.log(selectedChat);
+  const { socket } = useSocketState();
+
   const newChatData = useChatData(selectedChat);
+
+  const startVideoCallHandler = () => {
+    const receivers = getReceivers(selectedChat, user?._id);
+    const uniqueChannelName = Math.random().toString(36).substring(2, 11);
+
+    socket.emit("call started", {
+      receivers,
+      channelName: uniqueChannelName,
+      caller: { name: user?.name, avatar: user?.avatar, email: user?.email },
+      groupChatName: selectedChat?.isGroupChat ? selectedChat?.chatName : false,
+    });
+
+    const newWindow = window.open(
+      window.location.origin + `/meet/${uniqueChannelName}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+    if (newWindow) newWindow.opener = null;
+  };
 
   return (
     <div
@@ -43,22 +65,27 @@ const ChatSectionTop = () => {
           </div>
         </div>
 
-        <div className="flex items-center md:gap-4 shrink-0 text-primaryBlue">
-          <button
-            className={`w-12 h-12 md:w-16 md:h-16 lg:w-12 lg:h-12   rounded-full p-2 ${
-              user?.darkTheme ? "hover:bg-[#202C3A]" : "hover:bg-[#E8F3FF]"
-            }`}
+        <button
+          onClick={startVideoCallHandler}
+          className={`flex items-center md:gap-2 lg:gap-1 shrink-0 text-primaryBlue px-2 md:pl-4 rounded-lg ${
+            user?.darkTheme ? "hover:bg-[#202C3A]" : "hover:bg-[#E8F3FF]"
+          }`}
+        >
+          <div
+            className={
+              selectedChat?.isGroupChat
+                ? "hidden md:block md:text-[22px] lg:text-lg"
+                : "hidden"
+            }
+          >
+            Start Group Call
+          </div>
+          <div
+            className={`w-10 h-10 p-1 md:p-2 md:w-14 md:h-14 lg:w-12 lg:h-12`}
           >
             <IoCallOutline className="w-full h-full" />
-          </button>
-          <button
-            className={`w-12 h-12 md:w-16 md:h-16 lg:w-12 lg:h-12 rounded-full p-2 ${
-              user?.darkTheme ? "hover:bg-[#202C3A]" : "hover:bg-[#E8F3FF]"
-            }`}
-          >
-            <IoVideocamOutline className="w-full h-full" />
-          </button>
-        </div>
+          </div>
+        </button>
       </div>
     </div>
   );

@@ -42,7 +42,7 @@ const SidebarChatTile = ({ chatData }) => {
       />
       <div
         className={`flex flex-col gap-1 md:gap-2 lg:gap-1 justify-center w-full overflow-hidden ${
-          user?.darkTheme ? "text-[#DCDCDC]" : "text-[#636362]"
+          user?.darkTheme ? "text-white" : "text-black"
         }`}
       >
         <div className="font-bold text-xl md:text-2xl lg:text-xl text-start">
@@ -51,8 +51,12 @@ const SidebarChatTile = ({ chatData }) => {
         <div
           className={`w-full text-start md:text-xl lg:text-lg shrink text-nowrap truncate ${
             seenLatestMessage || selectedChat?._id === chatData?._id
-              ? "font-normal"
-              : "font-medium"
+              ? user?.darkTheme
+                ? "text-[#C7C7C7]"
+                : "text-[#626262]"
+              : user?.darkTheme
+              ? "text-white font-medium"
+              : "text-black font-medium"
           }`}
         >
           {newChatData?.latestMessage || ""}

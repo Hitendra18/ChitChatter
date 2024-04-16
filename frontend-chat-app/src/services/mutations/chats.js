@@ -1,5 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { accessRegularChat, createGroupChat } from "../api/chats";
+import {
+  accessRegularChat,
+  createGroupChat,
+  updateGroupAvatar,
+} from "../api/chats";
+import { useChatState } from "../../contexts/useChatState";
 
 export const useAccessRegularChat = (onSuccess) => {
   return useMutation({
@@ -24,6 +29,26 @@ export const useCreateGroupChat = (onGroupChatCreation) => {
       if (data) {
         console.log("Created Group Chat", data);
         onGroupChatCreation(data);
+      }
+    },
+  });
+};
+
+export const useUpdateGroupAvatar = () => {
+  const { setSelectedChat } = useChatState();
+  return useMutation({
+    mutationFn: ({ formData, token, chatId }) => {
+      return updateGroupAvatar({ formData, token, chatId });
+    },
+    onSuccess: (data) => {
+      console.log("data", data);
+      if (data) {
+        setSelectedChat((prev) => {
+          if (prev) {
+            prev.avatar = data.avatar;
+          }
+          return prev;
+        });
       }
     },
   });

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
@@ -83,6 +84,28 @@ export const createGroupChat = async ({ users, chatName, token }) => {
     );
     return data;
   } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateGroupAvatar = async ({ formData, token, chatId }) => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    const { data } = await axiosInstance.patch(
+      `/api/chats/update-group-avatar/${chatId}`,
+      formData,
+      config
+    );
+
+    return data;
+  } catch (error) {
+    toast.error(error.response?.data?.message);
     console.log(error);
   }
 };

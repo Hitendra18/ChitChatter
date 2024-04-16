@@ -26,7 +26,7 @@ const GeneralTopBar = () => {
     {
       title: "Go to chats",
       onClick: () => {
-        navigate("/");
+        navigate("/chats");
       },
     },
     {
@@ -39,7 +39,7 @@ const GeneralTopBar = () => {
         });
         dispatch(resetUserInfo());
         localStorage.removeItem("account");
-        navigate("/sign-up");
+        navigate("/");
         toast.success("You are logged out!");
       },
     },
@@ -52,7 +52,7 @@ const GeneralTopBar = () => {
       }`}
     >
       <div className="flex justify-between items-center mx-2">
-        <Link to={"/"} className="shrink-0">
+        <Link to={"/chats"} className="shrink-0">
           <img src={images.Logo} alt="logo" className="h-6 md:h-8 lg:h-6" />
         </Link>
         <div className="flex items-center gap-1 md:gap-4 lg:gap-1 shrink-0 text-primaryBlue">
@@ -76,7 +76,7 @@ const GeneralTopBar = () => {
                   : images.defaultAvatar
               }
               alt="profile"
-              className="h-12 p-2 md:h-16 lg:h-14 rounded-full"
+              className="h-12 w-12 p-2 md:h-16 md:w-16 lg:h-14 lg:w-14 object-cover rounded-full"
             />
           </HoverDropdown>
         </div>

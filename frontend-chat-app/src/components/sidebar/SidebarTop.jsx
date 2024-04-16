@@ -71,7 +71,7 @@ const SidebarTop = () => {
         });
         dispatch(resetUserInfo());
         localStorage.removeItem("account");
-        navigate("/sign-up");
+        navigate("/");
         toast.success("You are logged out!");
       },
     },
@@ -84,7 +84,7 @@ const SidebarTop = () => {
       }`}
     >
       <div className="flex justify-between items-center mx-2">
-        <Link to={"/"} className="shrink-0">
+        <Link to={"/chats"} className="shrink-0">
           <img
             src={images.LogoIcon}
             alt="logo"
@@ -120,7 +120,7 @@ const SidebarTop = () => {
                   : images.defaultAvatar
               }
               alt="profile"
-              className="h-12 p-2 md:h-16 lg:h-14 rounded-full"
+              className="h-12 w-12 p-2 md:h-16 md:w-16 lg:h-14 lg:w-14 object-cover rounded-full"
             />
           </HoverDropdown>
         </div>

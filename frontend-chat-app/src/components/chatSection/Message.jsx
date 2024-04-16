@@ -18,7 +18,7 @@ const Message = ({ messageData }) => {
                   messageData?.sender?.avatar
                 : images.defaultAvatar
             }
-            className="w-7 h-7 rounded-full"
+            className="w-7 h-7 object-cover rounded-full"
             alt=""
           />
         )}

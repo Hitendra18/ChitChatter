@@ -28,7 +28,7 @@ const MeetPage = () => {
   // if user doesn't exists
   useEffect(() => {
     if (!user) {
-      navigate("/sign-up");
+      navigate("/");
       return;
     }
     document.title = "ChitChatter | " + user?.name;
@@ -66,28 +66,20 @@ const MeetPage = () => {
 
   // play the remote user audio tracks
   audioTracks.forEach((track) => track.play());
-  // const arr = [...Array(1)];
 
   return (
     <div className="flex flex-col h-[100vh] gap-2 items-center p-1">
       {/* Users */}
-      <div className="flex justify-between w-full grow flex-wrap">
-        {/* Remote Users */}
+      <div className="flex flex-col md:flex-row justify-between w-full grow flex-wrap gap-4">
         {remoteUsers.map((user) => (
           <div
-            className="overflow-hidden my-1 max-h-full rounded-lg min-w-[calc(50%-12px)] max-w-full"
+            className="rounded-xl overflow-hidden max-h-full flex-grow"
             key={user.uid}
           >
             <RemoteUser user={user} />
           </div>
         ))}
-
-        {/* Local User */}
-        <div
-          className={`overflow-hidden my-1 min-w-[calc(50%-12px)] max-w-full rounded-lg max-h-full ${
-            remoteUsers.length % 2 ? "" : "grow"
-          }`}
-        >
+        <div className="rounded-xl overflow-hidden max-h-full flex-grow">
           <LocalUser
             audioTrack={localMicrophoneTrack}
             videoTrack={localCameraTrack}
@@ -95,37 +87,12 @@ const MeetPage = () => {
             micOn={micOn}
             playAudio={micOn}
             playVideo={cameraOn}
-            className=""
           />
         </div>
-
-        {/* <div className="border border-green-500 w-full h-10"> */}
-        {/* {
-            // Initialize each remote stream using RemoteUser component
-            remoteUsers.map((user) => (
-              <div key={user.uid} className="h-28 w-28">
-                <RemoteUser user={user} />
-              </div>
-            ))
-          } */}
-        {/* </div> */}
-
-        {/* Local Users */}
-        {/* <div className="border border-blue-500 w-full"> */}
-        {/* <LocalUser
-            audioTrack={localMicrophoneTrack}
-            videoTrack={localCameraTrack}
-            cameraOn={cameraOn}
-            micOn={micOn}
-            playAudio={micOn}
-            playVideo={cameraOn}
-            className=""
-          /> */}
-        {/* </div> */}
       </div>
 
       {/* Controls */}
-      <div className="w-full rounded-2xl flex py-3 gap-10 items-center justify-center text-white bg-[#111B25]">
+      <div className="w-full rounded-2xl flex py-3 gap-5 md:gap-10 items-center justify-center text-white bg-[#111B25]">
         <button
           className="bg-[#232C36] hover:bg-[#3F4950] transition-colors duration-200 rounded-lg py-2 px-3"
           onClick={() => setMicOn((a) => !a)}
@@ -152,7 +119,7 @@ const MeetPage = () => {
             setMicOn(false);
             setCameraOn(false);
             setActiveConnection(false);
-            navigate("/");
+            navigate("/chats");
           }}
         >
           <MdCallEnd className="h-8 w-8" />

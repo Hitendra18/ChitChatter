@@ -37,7 +37,7 @@ const SidebarUserTile = ({ userData }) => {
             ? import.meta.env.VITE_UPLOAD_FOLDER_URL + userData?.avatar
             : images.defaultAvatar
         }
-        className="w-14  h-14 md:w-16 md:h-16 lg:w-14 lg:h-14 rounded-full shrink-0"
+        className="w-14 h-14 md:w-16 md:h-16 lg:w-14 lg:h-14 object-cover rounded-full shrink-0"
         alt=""
       />
       <div

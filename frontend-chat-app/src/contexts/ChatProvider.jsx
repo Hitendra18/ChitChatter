@@ -7,6 +7,7 @@ const ChatProvider = ({ children }) => {
   const [searchInput, setSearchInput] = useState("");
   const [chatsData, setChatsData] = useState([]);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
+  const [showChatInfo, setShowChatInfo] = useState(false);
 
   return (
     <chatContext.Provider
@@ -21,6 +22,8 @@ const ChatProvider = ({ children }) => {
         setChatsData,
         showCreateGroup,
         setShowCreateGroup,
+        showChatInfo,
+        setShowChatInfo,
       }}
     >
       {children}

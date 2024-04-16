@@ -7,7 +7,7 @@ import { getReceivers } from "../../utils/getReceivers";
 
 const ChatSectionTop = () => {
   const { userInfo: user } = useSelector((state) => state.user);
-  const { selectedChat, setSelectedChat } = useChatState();
+  const { selectedChat, setSelectedChat, setShowChatInfo } = useChatState();
   const { socket } = useSocketState();
 
   const newChatData = useChatData(selectedChat);
@@ -31,6 +31,10 @@ const ChatSectionTop = () => {
     if (newWindow) newWindow.opener = null;
   };
 
+  const handleShowChatInfo = () => {
+    setShowChatInfo(true);
+  };
+
   return (
     <div
       className={`flex flex-col px-2 py-2 md:px-4 md:py-4 lg:px-2 lg:py-3 border-b gap-5 ${
@@ -47,7 +51,10 @@ const ChatSectionTop = () => {
           >
             <IoArrowBack className="w-full h-full" />
           </button>
-          <div className="flex items-center gap-2">
+          <button
+            onClick={handleShowChatInfo}
+            className="flex items-center gap-2"
+          >
             <img
               src={newChatData?.avatar}
               alt="profile"
@@ -62,7 +69,7 @@ const ChatSectionTop = () => {
                 {newChatData?.chatName}
               </p>
             </div>
-          </div>
+          </button>
         </div>
 
         <button

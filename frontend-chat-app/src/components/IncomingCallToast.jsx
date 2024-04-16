@@ -18,7 +18,7 @@ const IncomingCallToast = ({
               : images.defaultAvatar
           }
           alt="User"
-          className="w-12 h-12 rounded-full"
+          className="w-12 h-12 object-cover rounded-full"
         />
         <div className="ml-4">
           <div className="text-lg font-semibold">

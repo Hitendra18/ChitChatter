@@ -15,7 +15,7 @@ const SignUpPage = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/");
+      navigate("/chats");
     }
   }, [user, navigate]);
 
@@ -56,7 +56,7 @@ const SignUpPage = () => {
           <div>
             <img src={images.Logo} className="w-48" />
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center w-full">
             <h1 className="text-2xl xl:text-3xl font-extrabold">Sign Up</h1>
             <div className="w-full flex-1 mt-8">
               <form

@@ -9,17 +9,18 @@ import CreateGroup from "../components/createGroup/CreateGroup";
 import CreateGroupProvider from "../contexts/CreateGroupProvider";
 import { toast } from "react-toastify";
 import IncomingCallToast from "../components/IncomingCallToast";
+import ChatInfo from "../components/chatInfo/ChatInfo";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const { userInfo: user } = useSelector((state) => state.user);
-  const { showCreateGroup } = useChatState();
+  const { showCreateGroup, showChatInfo } = useChatState();
   const { socket } = useSocketState();
 
   // if user doesn't exists
   useEffect(() => {
     if (!user) {
-      navigate("/sign-up");
+      navigate("/");
       return;
     }
     document.title = "ChitChatter | " + user?.name;
@@ -75,7 +76,9 @@ const HomePage = () => {
     <div className="relative">
       <div
         className={`lg:flex  ${
-          showCreateGroup ? "pointer-events-none" : "pointer-events-auto"
+          showCreateGroup || showChatInfo
+            ? "pointer-events-none"
+            : "pointer-events-auto"
         }`}
       >
         <ChatSidebar />
@@ -87,6 +90,7 @@ const HomePage = () => {
           <CreateGroup />
         </CreateGroupProvider>
       )}
+      {showChatInfo && <ChatInfo />}
     </div>
   );
 };

@@ -70,7 +70,6 @@ export const updateUser = async ({ changedData, token }) => {
 
     return data;
   } catch (error) {
-    toast.error(error.response?.data?.message);
     console.log(error);
   }
 };

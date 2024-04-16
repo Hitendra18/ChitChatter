@@ -18,7 +18,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (!user) {
-      navigate("/sign-up");
+      navigate("/");
       return;
     }
     document.title = "ChitChatter | " + user?.name;

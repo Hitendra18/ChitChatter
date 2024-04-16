@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Chat = require("../models/Chat");
 const User = require("../models/User");
+const uploadPicture = require("../middlewares/uploadPicture");
 
 const accessRegularChat = async (req, res, next) => {
   try {
@@ -155,9 +156,54 @@ const getRegularChat = async (req, res, next) => {
   }
 };
 
+const updateGroupAvatar = async (req, res, next) => {
+  try {
+    const upload = uploadPicture.single("groupAvatar");
+
+    upload(req, res, async function (err) {
+      if (err) {
+        const error = new Error(
+          "An unknown error occurred during uploading... " + err.message
+        );
+        next(error);
+      } else {
+        // if pic exists
+        if (req.file) {
+          let filename;
+          const updatedChat = await Chat.findById(req.params.chatId);
+
+          filename = updatedChat.avatar;
+
+          // remove previous avatar if exits
+          if (filename) {
+            fileRemover(filename);
+          }
+          updatedChat.avatar = req.file.filename;
+          await updatedChat.save();
+
+          res.json(updatedChat);
+        }
+        // if file doesn't exists(requested to delete)
+        else {
+          let filename;
+          let updatedChat = await Chat.findById(req.params.chatId);
+          filename = updatedChat.avatar;
+          updatedChat.avatar = "";
+          await updatedChat.save();
+          fileRemover(filename);
+          res.json(updatedChat);
+        }
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   accessRegularChat,
   createGroupChat,
   getAllChats,
   getRegularChat,
+  updateGroupAvatar,
 };

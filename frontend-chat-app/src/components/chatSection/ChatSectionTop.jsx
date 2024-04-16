@@ -4,11 +4,13 @@ import { useChatState } from "../../contexts/useChatState";
 import { useChatData } from "../../hooks/chatTileHooks";
 import { useSocketState } from "../../contexts/useSocketState";
 import { getReceivers } from "../../utils/getReceivers";
+import { useNavigate } from "react-router-dom";
 
 const ChatSectionTop = () => {
   const { userInfo: user } = useSelector((state) => state.user);
   const { selectedChat, setSelectedChat, setShowChatInfo } = useChatState();
   const { socket } = useSocketState();
+  const navigate = useNavigate();
 
   const newChatData = useChatData(selectedChat);
 
@@ -23,12 +25,7 @@ const ChatSectionTop = () => {
       groupChatName: selectedChat?.isGroupChat ? selectedChat?.chatName : false,
     });
 
-    const newWindow = window.open(
-      window.location.origin + `/meet/${uniqueChannelName}`,
-      "_blank",
-      "noopener,noreferrer"
-    );
-    if (newWindow) newWindow.opener = null;
+    navigate(`/meet/${uniqueChannelName}`);
   };
 
   const handleShowChatInfo = () => {

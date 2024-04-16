@@ -48,12 +48,9 @@ const HomePage = () => {
             groupChatName={groupChatName}
             onJoin={() => {
               console.log("User joined");
-              const newWindow = window.open(
-                window.location.origin + `/meet/${channelName}`,
-                "_blank",
-                "noopener,noreferrer"
-              );
-              if (newWindow) newWindow.opener = null;
+
+              navigate(`/meet/${channelName}`);
+
               toast.dismiss(); // Close the toast
             }}
             onReject={() => {

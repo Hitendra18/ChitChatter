@@ -22,6 +22,7 @@ Chit-Chatter is a real-time chat application that allows users to communicate se
 
 ## Folder Structure
 
+```plaintext
 .
 ├── backend-chat-app/
 │ ├── config/
@@ -115,5 +116,6 @@ Chit-Chatter is a real-time chat application that allows users to communicate se
 ├── .gitignore
 ├── tailwind.config.js
 └── vercel.json
+```
 
 ## Thank You❤️

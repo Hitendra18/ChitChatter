@@ -17,7 +17,7 @@ Chit-Chatter is a real-time chat application that allows users to communicate se
 
 ## Technologies Used
 
-**Frontend**: React.js, agora-rtc-react, socket.io-client, react-router-dom, Context API, react-redux, @tanstack/react-query, axios
-**Backend**: Express.js, socket.io, MongoDB, mongoose, multer, jsonwebtoken (JWT), bcryptjs
+- **Frontend**: React.js, agora-rtc-react, socket.io-client, react-router-dom, Context API, react-redux, @tanstack/react-query, axios
+- **Backend**: Express.js, socket.io, MongoDB, mongoose, multer, jsonwebtoken (JWT), bcryptjs
 
 ## Thank You❤️

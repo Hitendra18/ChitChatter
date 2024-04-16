@@ -34,10 +34,10 @@ function App() {
             </ChatProvider>
           }
         />
-        <Route path="/" element={<SignUpPage />} />
-        <Route path="/sign-in" element={<SignInPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route
+        <Route index path="/" element={<SignUpPage />} />
+        <Route index path="/sign-in" element={<SignInPage />} />
+        <Route index path="/profile" element={<ProfilePage />} />
+        <Route index
           path="/meet/:meetId"
           element={
             <AgoraRTCProvider client={agoraClient}>

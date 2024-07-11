@@ -14,7 +14,7 @@ export const useChatData = (chat) => {
   if (chat?.isGroupChat) {
     chatDataToSend.chatName = chat?.chatName;
     chatDataToSend.avatar = chat?.avatar
-      ? import.meta.env.VITE_UPLOAD_FOLDER_URL + chat?.avatar
+      ? chat?.avatar
       : images.defaultGroupAvatar;
 
     chatDataToSend.latestMessage =
@@ -30,12 +30,12 @@ export const useChatData = (chat) => {
     if (chat?.users[0]?._id === user?._id) {
       chatDataToSend.chatName = chat?.users[1]?.name;
       chatDataToSend.avatar = chat?.users[1]?.avatar
-        ? import.meta.env.VITE_UPLOAD_FOLDER_URL + chat?.users[1]?.avatar
+        ? chat?.users[1]?.avatar
         : images.defaultAvatar;
     } else {
       chatDataToSend.chatName = chat?.users[0]?.name;
       chatDataToSend.avatar = chat?.users[0]?.avatar
-        ? import.meta.env.VITE_UPLOAD_FOLDER_URL + chat?.users[0]?.avatar
+        ? chat?.users[0]?.avatar
         : images.defaultAvatar;
     }
   }

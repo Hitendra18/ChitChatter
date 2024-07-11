@@ -14,8 +14,7 @@ const Message = ({ messageData }) => {
           <img
             src={
               messageData?.sender?.avatar
-                ? import.meta.env.VITE_UPLOAD_FOLDER_URL +
-                  messageData?.sender?.avatar
+                ? messageData?.sender?.avatar
                 : images.defaultAvatar
             }
             className="w-7 h-7 object-cover rounded-full"

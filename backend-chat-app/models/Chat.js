@@ -9,6 +9,7 @@ const chatSchema = new mongoose.Schema(
     groupAdmins: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     latestMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },
     avatar: { type: String, default: "" },
+    avatarPublicId: { type: String, default: "" },
   },
   { timestamps: true }
 );

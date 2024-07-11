@@ -14,7 +14,7 @@ const IncomingCallToast = ({
         <img
           src={
             avatar
-              ? import.meta.env.VITE_UPLOAD_FOLDER_URL + avatar
+              ? avatar
               : images.defaultAvatar
           }
           alt="User"

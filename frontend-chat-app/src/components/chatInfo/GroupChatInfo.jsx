@@ -43,7 +43,7 @@ const GroupChatInfo = () => {
         <img
           src={
             selectedChat?.avatar
-              ? import.meta.env.VITE_UPLOAD_FOLDER_URL + selectedChat?.avatar
+              ? selectedChat?.avatar
               : images.defaultGroupAvatar
           }
           className="rounded-full h-40 w-40 mx-10 object-cover hover:brightness-50 transition-all duration-300 hover:cursor-pointer"
@@ -68,7 +68,7 @@ const GroupChatInfo = () => {
             <img
               src={
                 groupOwner?.avatar
-                  ? import.meta.env.VITE_UPLOAD_FOLDER_URL + groupOwner?.avatar
+                  ? groupOwner?.avatar
                   : images.defaultGroupAvatar
               }
               alt=""
@@ -92,9 +92,7 @@ const GroupChatInfo = () => {
                 <div key={item._id} className="flex gap-2 items-center px-2">
                   <img
                     src={
-                      item?.avatar
-                        ? import.meta.env.VITE_UPLOAD_FOLDER_URL + item?.avatar
-                        : images.defaultGroupAvatar
+                      item?.avatar ? item?.avatar : images.defaultGroupAvatar
                     }
                     alt=""
                     className="rounded-full w-10 h-10 object-cover"

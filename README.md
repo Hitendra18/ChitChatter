@@ -6,7 +6,7 @@ Chit-Chatter is a real-time chat application that allows users to communicate se
 
 ## Features
 
-- **Realtime Messaging**: Send and receive text messages in real-time, creating a dynamic conversation experience.
+- **Realtime Messaging**: Send and receive text messages in real-time, creating a dynamic conversation experience.v
 - **Video Calling**: Initiate video calls with other users for face-to-face communication.
 - **User Authentication**: Create individual accounts, allowing users to personalize their experience and maintain privacy.
 - **Dark Mode Support**: Enjoy a visually pleasing experience with the option to switch between light and dark themes.
@@ -45,7 +45,8 @@ Chit-Chatter is a real-time chat application that allows users to communicate se
 │ │ └── userRoutes.js
 │ ├── uploads
 │ ├── utils/
-│ │ └── fileRemover.js
+│ │ ├── fileRemover.js
+| | └── cloudinary.js
 │ ├── server.js
 │ ├── socketLogic.js
 │ ├── .env

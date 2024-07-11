@@ -1,8 +1,12 @@
+const path = require("path");
 const User = require("../models/User");
 const jsonwebtoken = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const uploadPicture = require("../middlewares/uploadPicture");
 const fileRemover = require("../utils/fileRemover");
+const {
+  deleteFromCloudinary,
+  uploadOnCloudinary,
+} = require("../utils/cloudinary");
 
 const signUpUser = async (req, res, next) => {
   try {
@@ -164,54 +168,74 @@ const updateUserProfile = async (req, res, next) => {
 
 const updateAvatar = async (req, res, next) => {
   try {
-    const upload = uploadPicture.single("profilePicture");
+    if (req.file) {
+      let filename = req.file.filename;
 
-    upload(req, res, async function (err) {
-      if (err) {
-        const error = new Error(
-          "An unknown error occurred during uploading... " + err.message
-        );
-        next(error);
-      } else {
-        // if pic exists
-        if (req.file) {
-          let filename;
-          const updatedUser = await User.findById(req.user._id);
-          filename = updatedUser.avatar;
+      // find the user
+      const updatedUser = await User.findById(req.user._id);
 
-          // remove previous avatar if exits
-          if (filename) {
-            fileRemover(filename);
-          }
-          updatedUser.avatar = req.file.filename;
-          await updatedUser.save();
+      // get avatar publicId
+      let avatarPublicId = updatedUser.avatarPublicId;
 
-          res.json({
-            _id: updatedUser._id,
-            avatar: updatedUser.avatar,
-            name: updatedUser.name,
-            email: updatedUser.email,
-            darkTheme: updatedUser.darkTheme,
-          });
-        }
-        // if file doesn't exists(requested to delete)
-        else {
-          let filename;
-          let updatedUser = await User.findById(req.user._id);
-          filename = updatedUser.avatar;
-          updatedUser.avatar = "";
-          await updatedUser.save();
-          fileRemover(filename);
-          res.json({
-            _id: updatedUser._id,
-            avatar: updatedUser.avatar,
-            name: updatedUser.name,
-            email: updatedUser.email,
-            darkTheme: updatedUser.darkTheme,
-          });
+      // remove previous avatar if exits
+      if (avatarPublicId) {
+        const res = await deleteFromCloudinary(avatarPublicId);
+        if (res == null) {
+          const err = new Error("error removing profile pic...");
+          return next(err);
         }
       }
-    });
+
+      // after removing old avatar upload new avatar to cloudinary
+      const uploadRes = await uploadOnCloudinary(
+        path.join(__dirname, "..", "uploads", filename)
+      );
+      fileRemover(filename);
+
+      // if not uploaded then throw an error
+      if (uploadRes == null) {
+        const err = new Error("error uploading profile pic...");
+        return next(err);
+      }
+
+      updatedUser.avatar = uploadRes.url;
+      updatedUser.avatarPublicId = uploadRes.publicId;
+      await updatedUser.save();
+
+      res.json({
+        _id: updatedUser._id,
+        avatar: updatedUser.avatar,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        darkTheme: updatedUser.darkTheme,
+      });
+    }
+    // if file doesn't exists(requested to delete)
+    else {
+      // get user from database
+      let updatedUser = await User.findById(req.user._id);
+
+      // extract avatarPublicId from user
+      let avatarPublicId = updatedUser.avatarPublicId;
+
+      // set them null
+      updatedUser.avatar = "";
+      updatedUser.avatarPublicId = "";
+
+      // remove image from from cloudinary
+      await deleteFromCloudinary(avatarPublicId);
+
+      // save the user to the database
+      await updatedUser.save();
+
+      res.json({
+        _id: updatedUser._id,
+        avatar: updatedUser.avatar,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        darkTheme: updatedUser.darkTheme,
+      });
+    }
   } catch (error) {
     next(error);
   }

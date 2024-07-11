@@ -12,7 +12,7 @@ const RegularChatInfo = () => {
       <img
         src={
           userData?.avatar
-            ? import.meta.env.VITE_UPLOAD_FOLDER_URL + userData?.avatar
+            ? userData?.avatar
             : images.defaultAvatar
         }
         className="rounded-full h-40 w-40 object-cover shrink"

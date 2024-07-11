@@ -90,7 +90,7 @@ const ProfilePage = () => {
             <img
               src={
                 user?.avatar
-                  ? import.meta.env.VITE_UPLOAD_FOLDER_URL + user?.avatar
+                  ? user?.avatar
                   : images.defaultAvatar
               }
               className="rounded-full h-60 w-60 lg:h-64 lg:w-64 object-cover hover:brightness-50 transition-all duration-300"

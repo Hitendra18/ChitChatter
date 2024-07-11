@@ -116,7 +116,7 @@ const SidebarTop = () => {
             <img
               src={
                 user?.avatar
-                  ? import.meta.env.VITE_UPLOAD_FOLDER_URL + user?.avatar
+                  ? user?.avatar
                   : images.defaultAvatar
               }
               alt="profile"

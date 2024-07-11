@@ -1,7 +1,12 @@
+const path = require('path');
 const mongoose = require("mongoose");
 const Chat = require("../models/Chat");
 const User = require("../models/User");
-const uploadPicture = require("../middlewares/uploadPicture");
+const {
+  deleteFromCloudinary,
+  uploadOnCloudinary,
+} = require("../utils/cloudinary");
+const fileRemover = require('../utils/fileRemover');
 
 const accessRegularChat = async (req, res, next) => {
   try {
@@ -158,43 +163,61 @@ const getRegularChat = async (req, res, next) => {
 
 const updateGroupAvatar = async (req, res, next) => {
   try {
-    const upload = uploadPicture.single("groupAvatar");
+    // if pic exists
+    if (req.file) {
+      let filename = req.file.filename;
 
-    upload(req, res, async function (err) {
-      if (err) {
-        const error = new Error(
-          "An unknown error occurred during uploading... " + err.message
-        );
-        next(error);
-      } else {
-        // if pic exists
-        if (req.file) {
-          let filename;
-          const updatedChat = await Chat.findById(req.params.chatId);
+      // find the chat
+      const updatedChat = await Chat.findById(req.params.chatId);
 
-          filename = updatedChat.avatar;
+      // get avatar publicId
+      let avatarPublicId = updatedChat.avatarPublicId;
 
-          // remove previous avatar if exits
-          if (filename) {
-            fileRemover(filename);
-          }
-          updatedChat.avatar = req.file.filename;
-          await updatedChat.save();
-
-          res.json(updatedChat);
-        }
-        // if file doesn't exists(requested to delete)
-        else {
-          let filename;
-          let updatedChat = await Chat.findById(req.params.chatId);
-          filename = updatedChat.avatar;
-          updatedChat.avatar = "";
-          await updatedChat.save();
-          fileRemover(filename);
-          res.json(updatedChat);
+      // remove previous avatar if exits
+      if (avatarPublicId) {
+        const res = await deleteFromCloudinary(avatarPublicId);
+        if (res == null) {
+          const err = new Error("error removing group avatar...");
+          return next(err);
         }
       }
-    });
+
+      // after removing old avatar upload new avatar to cloudinary
+      const uploadRes = await uploadOnCloudinary(
+        path.join(__dirname, "..", "uploads", filename)
+      );
+      fileRemover(filename);
+
+      // if not uploaded then throw an error
+      if (uploadRes == null) {
+        const err = new Error("error uploading group avatar...");
+        return next(err);
+      }
+
+      updatedChat.avatar = uploadRes.url;
+      updatedChat.avatarPublicId = uploadRes.publicId;
+      await updatedChat.save();
+
+      res.json(updatedChat);
+    }
+    // if file doesn't exists(requested to delete)
+    else {
+      // get chat from database
+      let updatedChat = await Chat.findById(req.params.chatId);
+
+      // extract avatarPublicId from user
+      let avatarPublicId = updatedChat.avatarPublicId;
+
+      // set them null
+      updatedChat.avatar = "";
+      updatedChat.avatarPublicId = "";
+
+      // remove image from from cloudinary
+      await deleteFromCloudinary(avatarPublicId);
+
+      await updatedChat.save();
+      res.json(updatedChat);
+    }
   } catch (error) {
     next(error);
   }

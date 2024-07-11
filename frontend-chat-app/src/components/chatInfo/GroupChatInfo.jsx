@@ -50,7 +50,7 @@ const GroupChatInfo = () => {
           alt=""
         />
       </label>
-      <div className="self-center text-3xl font-semibold">
+      <div className="self-center text-3xl font-semibold text-center">
         {selectedChat?.chatName}
       </div>
       {user?._id === groupOwner?._id && (
